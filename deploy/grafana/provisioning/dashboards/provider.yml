@@ -1,0 +1,3 @@
+apiVersion: 1
+providers:
+  - { name: aipir, folder: AIPIR, type: file, options: { path: /etc/grafana/provisioning/dashboards } }

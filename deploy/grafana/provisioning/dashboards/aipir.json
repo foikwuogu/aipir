@@ -1,0 +1,15 @@
+{
+  "title": "AIPIR - Predictive Infrastructure Resilience",
+  "uid": "aipir-main",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    { "type": "timeseries", "title": "Anomaly score vs threshold", "gridPos": {"x":0,"y":0,"w":16,"h":8},
+      "targets": [ {"expr": "aipir_anomaly_score", "legendFormat": "score"}, {"expr": "aipir_threshold", "legendFormat": "threshold"} ] },
+    { "type": "stat", "title": "Active alarm by process", "gridPos": {"x":16,"y":0,"w":8,"h":8},
+      "targets": [ {"expr": "aipir_alarm", "legendFormat": "{{process}}"} ] },
+    { "type": "bargauge", "title": "Top contributing sensors", "gridPos": {"x":0,"y":8,"w":24,"h":10},
+      "targets": [ {"expr": "topk(10, aipir_sensor_residual)", "legendFormat": "{{sensor}}"} ] }
+  ]
+}

@@ -1,0 +1,9 @@
+data/raw/**/*.csv.gz
+__pycache__/
+*.pyc
+.env
+*.pem
+.terraform/
+*.tfstate*
+paper/*.pdf.tmp
+scratch/

@@ -1,0 +1,5 @@
+{
+  "repository_url": "[repository URL - set on publish]",
+  "doi": "[DOI - minted by Zenodo on publish]",
+  "release_date": "[date of release - set on publish]"
+}

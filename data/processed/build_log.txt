@@ -1,0 +1,42 @@
+== hai-21.03
+  fit D0: thr=0.3125 (0s)
+  fit D1: thr=8.5039 (2s)
+  fit D2: thr=0.6051 (1s)
+  fit D3: thr=2.2787 (26s)
+  fit D3+C: thr=4.6341 (30s)
+  fit D3-noclip: thr=136.3531 (25s)
+  scored dev test1: 43201 s, 629 attack s
+  scored test test2: 118801 s, 3449 attack s
+  scored test test3: 108001 s, 1535 attack s
+  scored test test4: 39601 s, 1157 attack s
+  scored test test5: 92401 s, 2177 attack s
+== hai-20.07
+  fit D0: thr=0.7712 (0s)
+  fit D1: thr=21.8590 (1s)
+  fit D2: thr=0.5812 (1s)
+  fit D3: thr=4.9382 (3s)
+  fit D3+C: thr=4.9382 (5s)
+  fit D3-noclip: thr=264.9534 (3s)
+  scored test test1: 291600 s, 11538 attack s
+  scored test test2: 153000 s, 5989 attack s
+      version split   detector  precision  recall     f1  events  events_detected  event_recall  ttd_median_s  ttd_mean_s  false_episodes  test_days  false_episodes_per_day  routing_n  routing_accuracy
+0   hai-20.07  test         D0      0.074   0.692  0.134      38               20         0.526          70.0      79.150               0      5.146                   0.000         20             1.000
+1   hai-20.07  test         D1      0.468   0.679  0.554      38               27         0.711          58.0      74.370              95      5.146                  18.462         27             1.000
+2   hai-20.07  test         D2      0.529   0.225  0.316      38               25         0.658         120.0     128.560              83      5.146                  16.130          0               NaN
+3   hai-20.07  test         D3      0.990   0.289  0.448      38               21         0.553          68.0     104.857               2      5.146                   0.389         21             0.857
+4   hai-20.07  test       D3+C      0.113   0.601  0.190      38               22         0.579          51.0      80.818               2      5.146                   0.389         22             0.773
+5   hai-20.07  test  D3-noclip      1.000   0.006  0.013      38                3         0.079         202.0     215.333               0      5.146                   0.000          3             1.000
+6   hai-21.03   dev         D0      0.153   0.606  0.244       5                3         0.600          10.0      13.000               0      0.500                   0.000          3             1.000
+7   hai-21.03   dev         D1      0.677   0.738  0.706       5                5         1.000          32.0      37.000               0      0.500                   0.000          5             0.600
+8   hai-21.03   dev         D2      0.000   0.000  0.000       5                0         0.000           NaN         NaN               0      0.500                   0.000          0               NaN
+9   hai-21.03   dev         D3      0.928   0.720  0.811       5                5         1.000          11.0      28.200               0      0.500                   0.000          5             1.000
+10  hai-21.03   dev       D3+C      0.971   0.423  0.589       5                3         0.600          18.0      19.667               0      0.500                   0.000          3             1.000
+11  hai-21.03   dev  D3-noclip      1.000   0.008  0.016       5                1         0.200          32.0      32.000               0      0.500                   0.000          1             1.000
+12  hai-21.03  test         D0      0.858   0.426  0.570      45               37         0.822          19.0      30.432               0      4.153                   0.000         37             1.000
+13  hai-21.03  test         D1      0.723   0.641  0.680      45               40         0.889          33.0      36.725               2      4.153                   0.482         40             0.800
+14  hai-21.03  test         D2      0.000   0.000  0.000      45                0         0.000           NaN         NaN               0      4.153                   0.000          0               NaN
+15  hai-21.03  test         D3      0.837   0.594  0.695      45               35         0.778          16.0      25.714               3      4.153                   0.722         35             1.000
+16  hai-21.03  test       D3+C      0.860   0.459  0.599      45               35         0.778          21.0      30.514               3      4.153                   0.722         35             0.886
+17  hai-21.03  test  D3-noclip      0.891   0.039  0.075      45               12         0.267          34.0      49.500               0      4.153                   0.000         12             1.000
+PIPE EXIT 0
+figures: ['fig1_architecture.png', 'fig2_detection.png', 'fig3_ttd.png', 'fig4_fa_tradeoff.png', 'fig5_timeline.png', 'fig6_downtime_scenario.png']

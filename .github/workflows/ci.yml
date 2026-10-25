@@ -1,0 +1,21 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest -q tests
+      - name: Validate deployment YAML
+        run: python -c "import yaml,glob; [list(yaml.safe_load_all(open(f))) for f in glob.glob('deploy/**/*.y*ml', recursive=True)]; print('yaml ok')"
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform -chdir=deploy/terraform fmt -check
+      - run: terraform -chdir=deploy/terraform init -backend=false
+      - run: terraform -chdir=deploy/terraform validate

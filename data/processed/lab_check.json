@@ -1,0 +1,24 @@
+{
+  "file": "hai-21.03 test4",
+  "seconds": 39601,
+  "stream_seconds_per_second": 3007.1817142438354,
+  "per_second_latency_ms": 0.33253727078193973,
+  "alarm_agreement": 0.9922729224009494,
+  "events": 5,
+  "events_detected_batch": 5,
+  "events_alarmed_stream": 5,
+  "stream_ttd_s": [
+    13,
+    25,
+    16,
+    15,
+    16
+  ],
+  "batch_ttd_s": [
+    13,
+    25,
+    16,
+    15,
+    16
+  ]
+}
