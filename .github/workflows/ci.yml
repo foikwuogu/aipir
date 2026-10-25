@@ -7,15 +7,25 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install -r requirements.txt pytest
-      - run: python -m pytest -q tests
-      - name: Validate deployment YAML
-        run: python -c "import yaml,glob; [list(yaml.safe_load_all(open(f))) for f in glob.glob('deploy/**/*.y*ml', recursive=True)]; print('yaml ok')"
-  terraform:
+      - run: pip install -r requirements.txt pytest ansible-core
+      - name: Unit tests
+        run: python -m pytest -q tests
+      - name: Drift-check demonstration
+        run: python tests/integration/drift_demo.py
+  iac:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
       - uses: hashicorp/setup-terraform@v3
-      - run: terraform -chdir=deploy/terraform fmt -check
-      - run: terraform -chdir=deploy/terraform init -backend=false
-      - run: terraform -chdir=deploy/terraform validate
+      - name: Install validators
+        run: |
+          pip install pyyaml ansible-core
+          curl -sSL https://github.com/prometheus/prometheus/releases/download/v2.53.0/prometheus-2.53.0.linux-amd64.tar.gz | tar xz
+          curl -sSL https://github.com/prometheus/alertmanager/releases/download/v0.27.0/alertmanager-0.27.0.linux-amd64.tar.gz | tar xz
+          curl -sSL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.111.0/otelcol-contrib_0.111.0_linux_amd64.tar.gz | tar xz otelcol-contrib
+          curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz | tar xz kubeconform
+          echo "$PWD:$PWD/prometheus-2.53.0.linux-amd64:$PWD/alertmanager-0.27.0.linux-amd64" >> "$GITHUB_PATH"
+      - name: Validate the IaC library
+        run: ./deploy/validate.sh

@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software or its results, please cite it as below, and cite the HAI dataset."
 type: software
 title: "AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework"
-version: "0.1.0"
+version: "0.2.0"
 date-released: "[date of release - set on publish]"
 authors:
   - family-names: "Ikwuogu"

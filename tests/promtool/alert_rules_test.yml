@@ -1,0 +1,46 @@
+# promtool test rules tests/promtool/alert_rules_test.yml
+rule_files: [../../deploy/observability/prometheus/alert_rules.yml]
+evaluation_interval: 5s
+tests:
+  - interval: 5s
+    input_series:
+      - series: 'aipir_alarm{process="P1"}'
+        values: '0 0 1 1 1 0'
+      - series: 'aipir_alarm{process="P2"}'
+        values: '0 0 0 0 0 0'
+    alert_rule_test:
+      - eval_time: 10s
+        alertname: AIPIRProcessAnomaly
+        exp_alerts:
+          - exp_labels: { process: P1, severity: critical, layer: respond }
+            exp_annotations:
+              summary: "AIPIR anomaly routed to P1"
+              description: "Predictive residual above calibrated threshold; recovery playbook for P1 requested."
+      - eval_time: 0s
+        alertname: AIPIRProcessAnomaly
+        exp_alerts: []
+  - interval: 1m
+    input_series:
+      - series: 'aipir_config_drift_unapproved'
+        values: '0 1 1 1 1 1 1 1'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: AIPIRUnapprovedConfigDrift
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: AIPIRUnapprovedConfigDrift
+        exp_alerts:
+          - exp_labels: { severity: warning, layer: recover }
+            exp_annotations:
+              summary: "Configuration differs from the approved baseline with no matching change record"
+              description: "Run `python -m aipir.drift check` and either record the change or roll it back (deploy/RUNBOOK.md)."
+  - interval: 30s
+    input_series:
+      - series: 'aipir_recovery_requests_total{status="pending_approval"}'
+        values: '1 1 1 1 1 1 1'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: AIPIRRecoveryAwaitingApproval
+        exp_alerts:
+          - exp_labels: { status: pending_approval, severity: warning, layer: recover }
+            exp_annotations: { summary: "A recovery is waiting for a second-person approval" }

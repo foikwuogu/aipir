@@ -1,0 +1,35 @@
+{
+  "1_clean_exit": 0,
+  "1_clean": 0,
+  "2_unapproved_exit": 3,
+  "2_unapproved": {
+    "total": 1,
+    "unapproved": 1,
+    "item": "deploy/observability/prometheus/alert_rules.yml"
+  },
+  "3_after_change_record_exit": 0,
+  "3_after_change_record": {
+    "total": 1,
+    "unapproved": 0,
+    "misconfigurations_per_100_changes": 0.0
+  },
+  "4_tampered_baseline_exit": 3,
+  "4_tampered_baseline_notes": [
+    "BASELINE SIGNATURE INVALID - baseline may have been tampered with"
+  ],
+  "5_k8s_exit": 3,
+  "5_k8s": {
+    "objects_declared": 19,
+    "findings": [
+      {
+        "source": "kubernetes",
+        "item": "Deployment/aipir/aipir-detector",
+        "change": "modified",
+        "fields": [
+          "/spec/template/spec/containers[0]/image"
+        ],
+        "approved": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+groups:
+  - name: aipir-resilience
+    rules:
+      # Respond: one alert per routed sub-process. The detector already debounces
+      # (5 s persistence, 30 s merge gap), so no extra `for:` delay is added here.
+      - alert: AIPIRProcessAnomaly
+        expr: max by (process) (aipir_alarm) == 1
+        labels: { severity: critical, layer: respond }
+        annotations:
+          summary: "AIPIR anomaly routed to {{ $labels.process }}"
+          description: "Predictive residual above calibrated threshold; recovery playbook for {{ $labels.process }} requested."
+      - alert: AIPIRScoreElevated
+        expr: aipir_anomaly_score > 0.8 * aipir_threshold
+        for: 30s
+        labels: { severity: warning, layer: predict }
+        annotations: { summary: "AIPIR score approaching threshold (early warning)" }
+      - alert: AIPIRTelemetryStalled
+        expr: rate(aipir_rows_processed_total[1m]) == 0
+        for: 2m
+        labels: { severity: critical, layer: observe }
+        annotations: { summary: "No telemetry scored for 2 minutes (observability gap)" }
+      - alert: AIPIRScrapeAuthFailing
+        expr: up{job="aipir"} == 0
+        for: 1m
+        labels: { severity: critical, layer: observe }
+        annotations: { summary: "Prometheus cannot scrape AIPIR (down or token rejected)" }
+      - alert: AIPIRUnapprovedConfigDrift
+        expr: aipir_config_drift_unapproved > 0
+        for: 5m
+        labels: { severity: warning, layer: recover }
+        annotations:
+          summary: "Configuration differs from the approved baseline with no matching change record"
+          description: "Run `python -m aipir.drift check` and either record the change or roll it back (deploy/RUNBOOK.md)."
+      - alert: AIPIRRecoveryAwaitingApproval
+        expr: aipir_recovery_requests_total{status="pending_approval"} > 0
+        for: 2m
+        labels: { severity: warning, layer: recover }
+        annotations: { summary: "A recovery is waiting for a second-person approval" }

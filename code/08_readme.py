@@ -12,6 +12,11 @@ R = lambda v, d: S["results"][f"{v}|test|{d}"]  # noqa: E731
 a, b = "hai-21.03", "hai-20.07"
 c, dt = S["downtime"]["central"], S["downtime"]
 pct = lambda x: f"{100 * x:.0f}%"  # noqa: E731
+import re  # noqa: E402
+LAB = json.load(open(os.path.join(ROOT, "data", "processed", "lab_stack_check.json")))
+VAL = re.search(r"SUMMARY pass=(\d+) fail=(\d+) skip=(\d+)",
+                open(os.path.join(ROOT, "data", "processed", "iac_validation.txt")).read()).groups()
+NTPL = len(re.findall(r"^\| \d+ \|", open(os.path.join(ROOT, "deploy", "README.md")).read(), re.M))
 NAME = {"D0": "Static limits", "D1": "PCA residual", "D2": "Isolation Forest", "D3": "**AIPIR predictive**"}
 
 
@@ -23,8 +28,8 @@ def row(v, k):
             f"{r['false_episodes_per_day']:.2f} | {route} |")
 
 
-status = ("**Status: v0.1.0 released** - see the DOI badge and CITATION.cff." if FINAL else
-          "**Status: DRAFT v0.1.0 - results not yet verified by the authors; do not cite.**")
+status = ("**Status: v0.2.0 released** - see the DOI badge and CITATION.cff." if FINAL else
+          "**Status: DRAFT v0.2.0 - results not yet verified by the authors; do not cite.**")
 authors = "; ".join(p["name"] for p in A["authors"] + A["collaborators"])
 s1 = c["S1_reduction_pct"]
 md = f"""# AIPIR - AI-Enabled Predictive Infrastructure Resilience Framework
@@ -36,10 +41,11 @@ energy-sector control systems in one reproducible loop:
 
 | Layer | What it does | Where |
 |---|---|---|
-| 1 Observe | Reads 1 Hz plant telemetry; exposes score, threshold, per-process alarm and per-sensor residuals as Prometheus metrics | `framework/aipir/service.py` |
+| 1 Observe | Reads 1 Hz plant telemetry; Prometheus metrics plus OpenTelemetry metrics, traces (one span per alarm and per recovery) and logs | `framework/aipir/service.py`, `otel.py`, `deploy/observability/` |
 | 2 Predict | Ridge forecaster predicts every sensor 1 s ahead from 30 s of history; robust, causal residual score | `framework/aipir/detectors.py` |
-| 3 Respond | Threshold calibrated on normal data only (1 alarm/day); debounced alarms routed to boiler / turbine / water process | `framework/aipir/metrics.py`, `routing.py`, `deploy/prometheus` |
-| 4 Recover | Alertmanager webhook selects the process playbook (dry-run); Terraform + Kubernetes restore the stack to a known-good state | `deploy/` |
+| 3 Respond | Threshold calibrated on normal data only (1 alarm/day); debounced alarms routed to boiler / turbine / water process; authenticated Alertmanager webhook | `framework/aipir/metrics.py`, `routing.py`, `deploy/observability/` |
+| 4 Recover | Recovery requests with two-person approval run Ansible playbooks (check mode by default); Terraform and Kubernetes restore the stack; signed configuration baseline and drift check | `framework/aipir/recovery.py`, `drift.py`, `deploy/ansible/`, `deploy/terraform/` |
+| Zero-Trust | Signed tokens on every call (Entra ID in a pilot), RBAC from a policy file, MFA for sensitive actions, two-person rule, hash-chained audit log, default-deny networking | `framework/aipir/zerotrust.py`, `deploy/zero-trust/` |
 
 It is validated on the open **HAI** security datasets (a hardware-in-the-loop testbed emulating
 steam-turbine power generation and pumped-storage hydropower) against three baselines, with every
@@ -70,6 +76,21 @@ over the {c['n_events']} held-out attacks by {c['S2_reduction_pct']:.1f}% (range
 manual recovery changes it by {-s1:+.1f}%; an exploratory layered setup (static limits + AIPIR)
 cuts it by {c['S3_reduction_pct']:.1f}%. See `docs/LIMITATIONS.md`.
 
+## Platform checks (lab)
+
+- **Zero-Trust, recovery and OpenTelemetry end to end:** {LAB['passed']}/{LAB['total']} checks passed
+  (`tests/integration/lab_stack_check.py`, against a live OpenTelemetry Collector, with Ansible
+  in check mode).
+- **IaC template library:** {NTPL} templates; {VAL[0]} validation checks passed, {VAL[1]} failed,
+  {VAL[2]} skipped (`deploy/validate.sh`, using terraform/OpenTofu, promtool, amtool, otelcol,
+  ansible-playbook and kubeconform).
+- **Configuration drift:** unapproved edits, approved changes, a tampered baseline and a swapped
+  container image are all classified correctly (`tests/integration/drift_demo.py`).
+
+These checks show the software works as designed in a lab. They are not pilot results: the SOW's
+measured targets (MTTD, MTTR, availability, misconfigurations, the 5 TB dataset) stay open until
+the site pilot produces them. See `docs/SOW_TRACEABILITY.md`.
+
 ## Reproduce
 
 ```bash
@@ -86,19 +107,24 @@ this README is read from `paper/stats.json`.
 
 ```bash
 # detector service replaying a held-out HAI file at 60x
-PYTHONPATH=framework python -m aipir.service --model models/aipir_hai2103.joblib \\
-    --replay data/raw/hai-21.03/test2.csv.gz --speed 60 --port 9108
-curl localhost:9108/metrics
+source docs/training/lab_env.sh          # lab secret + one token per role
+python -m aipir.service --model models/aipir_hai2103.joblib \\
+    --replay data/raw/hai-21.03/test2.csv.gz --speed 60 --port 9108 &
+api GET /metrics "$SCRAPER"
 
-# full stack: detector + Prometheus + Alertmanager + Grafana (http://localhost:3000)
-docker compose -f deploy/docker-compose.yml up --build
+# full stack: detector + OTel Collector + Prometheus + Alertmanager + Grafana
+./deploy/compose/gen-lab-secrets.sh
+docker compose -f deploy/compose/docker-compose.yml up --build
 
-# any Kubernetes cluster (cloud or plant edge)
-terraform -chdir=deploy/terraform init && terraform -chdir=deploy/terraform apply
+# any Kubernetes cluster (cloud or plant edge), and the Entra ID identity controls
+terraform -chdir=deploy/terraform/environments/lab-k8s init && terraform -chdir=deploy/terraform/environments/lab-k8s apply
+terraform -chdir=deploy/terraform/environments/azure-entra init && terraform -chdir=deploy/terraform/environments/azure-entra apply
 ```
 
-Recovery runs in **dry-run** mode: the service logs which playbook it would start and never writes
-to a control system. See `deploy/RUNBOOK.md`.
+Every endpoint except `/healthz` needs a token. For lab tokens, see `deploy/README.md` or
+`source docs/training/lab_env.sh`. Recovery runs in **dry-run** mode by default. In execute
+mode a second person must approve, and Ansible still runs in check mode until the site signs
+off. Nothing writes to a control system. See `deploy/RUNBOOK.md`.
 
 ## Data and sources
 
@@ -110,10 +136,18 @@ to a control system. See `deploy/RUNBOOK.md`.
 
 ## Repository map
 
-`code/` numbered pipeline (01 fetch ... 08 README) - `framework/aipir/` the framework package -
-`deploy/` Docker, Prometheus, Alertmanager, Grafana, Kubernetes, Terraform, runbook - `tests/` -
-`docs/` build spec, codebook, limitations, verification checklist, next steps, publish guide -
-`paper/` stats, figures, tables, manuscript - `models/` fitted models (CC BY-SA 4.0).
+| Path | Contents |
+|---|---|
+| `code/` | Numbered pipeline (01 fetch ... 08 README) |
+| `framework/aipir/` | Detectors, streaming scorer, service, Zero-Trust, OpenTelemetry, recovery/Ansible hook, drift check, KPI calculator |
+| `deploy/` | **IaC template library** (index in `deploy/README.md`): Terraform modules and environments, Kubernetes manifests, Docker/Compose, observability configs, Ansible, Zero-Trust policy, drift baseline, runbook, `validate.sh` |
+| `docs/REPLICATION_PLAYBOOK.md` | **Open-access replication playbook** for other facilities, including the KPI protocol |
+| `docs/training/` | **Training package**: curriculum, slide deck, six labs, instructor guide with recording script, quiz, evaluation |
+| `docs/SOW_TRACEABILITY.md` | Each SOW item: built, built and awaiting pilot, or open |
+| `docs/` (other) | Build spec, codebook, limitations, verification checklist, next steps, publish guide |
+| `tests/` | Unit tests, Prometheus alert tests, lab integration checks |
+| `paper/` | Stats, figures, tables, manuscript |
+| `models/` | Fitted models (CC BY-SA 4.0) |
 
 ## License
 
@@ -122,7 +156,7 @@ CC BY 4.0. Details in `LICENSE-DATA.md`.
 
 ## Citation and contact
 
-{authors}. *AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework*, v0.1.0, 2026.
+{authors}. *AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework*, v0.2.0, 2026.
 See `CITATION.cff`. Maintainer: {A['authors'][0]['name']} ({A['authors'][0]['email']},
 ORCID {A['authors'][0]['orcid']}).
 """

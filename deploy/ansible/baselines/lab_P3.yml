@@ -1,0 +1,3 @@
+# LAB example known-good baseline for P3 (not real plant values)
+process: P3
+setpoints: {}

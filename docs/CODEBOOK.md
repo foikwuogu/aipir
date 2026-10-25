@@ -62,6 +62,17 @@ Fitted scaler, AIPIR detector, calibrated threshold, and alarm parameters, loade
 `framework/aipir/service.py`. Derived from HAI; CC BY-SA 4.0. Load only with the pinned
 scikit-learn version in `requirements.txt`.
 
+## Platform check outputs
+
+| File | Written by | Contents |
+|---|---|---|
+| `data/processed/lab_stack_check.json` | `tests/integration/lab_stack_check.py` | Each Zero-Trust, recovery and OpenTelemetry check, pass/fail, detail; whether a real collector and Ansible were used |
+| `data/processed/drift_demo.json` | `tests/integration/drift_demo.py` | Drift outcomes for a clean baseline, an unapproved edit, a recorded change, a tampered baseline, and a simulated Kubernetes image swap |
+| `data/processed/iac_validation.txt` | `deploy/validate.sh` | PASS/FAIL/SKIP per template check, with the tool versions used |
+| `aipir_audit.jsonl` (runtime) | service | One JSON object per decision: `ts`, `decision` or `event`, `permission`, `subject`, `reason`, `prev` (SHA-256 of the previous line) |
+| `drift_report.json` (runtime) | `python -m aipir.drift check` | `findings` (source, item, change, approved), `counts`, `unapproved`, `approved_changes_in_period`, `misconfigurations_per_100_changes` |
+| `pilot_kpis.json/.md` (site) | `python -m aipir.kpi` | Per-phase MTTD, MTTR, availability, misconfigurations per 100 changes; comparison to SOW targets; tests |
+
 ## `paper/stats.json`
 
 Every number quoted in the manuscript and README, written by scripts 02-04. Documents read

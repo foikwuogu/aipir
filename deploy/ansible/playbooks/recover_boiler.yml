@@ -1,0 +1,10 @@
+# AIPIR recovery playbook - P1 (boiler). Started by the AIPIR service after two-person approval:
+#   ansible-playbook -i inventory/<site>.yml playbooks/recover_boiler.yml -e @vars.json [--check --diff]
+- name: AIPIR recover P1 boiler
+  hosts: p1_boiler_gateway
+  gather_facts: false
+  serial: 1
+  vars:
+    aipir_process: P1
+  roles:
+    - ot_restore

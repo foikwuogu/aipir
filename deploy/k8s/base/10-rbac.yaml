@@ -1,0 +1,46 @@
+# Least-privilege identities. Same content as terraform/modules/aipir-k8s-rbac (people bindings
+# are added per site, see k8s/README.md).
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: aipir-detector, namespace: aipir }
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: aipir-drift, namespace: aipir }
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: aipir-recovery, namespace: aipir }
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { name: aipir-drift-reader, namespace: aipir }
+rules:
+  - apiGroups: ["", apps, policy, networking.k8s.io, rbac.authorization.k8s.io, batch]
+    resources: [deployments, services, configmaps, serviceaccounts, poddisruptionbudgets, networkpolicies, roles, rolebindings, cronjobs]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: aipir-drift-reader, namespace: aipir }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: Role, name: aipir-drift-reader }
+subjects: [{ kind: ServiceAccount, name: aipir-drift, namespace: aipir }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { name: aipir-recovery, namespace: aipir }
+rules:
+  - apiGroups: [apps]
+    resources: [deployments]
+    resourceNames: [aipir-detector]
+    verbs: [get, patch]
+  - apiGroups: [apps]
+    resources: [replicasets]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: aipir-recovery, namespace: aipir }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: Role, name: aipir-recovery }
+subjects: [{ kind: ServiceAccount, name: aipir-recovery, namespace: aipir }]

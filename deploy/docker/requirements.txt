@@ -1,0 +1,7 @@
+numpy
+pandas
+scikit-learn==1.9.1
+joblib
+pyyaml
+cryptography
+ansible-core>=2.17

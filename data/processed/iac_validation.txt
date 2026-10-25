@@ -1,0 +1,21 @@
+AIPIR IaC library validation - 2026-10-25T04:16:31Z
+terraform binary: OpenTofu v1.8.5
+PASS  terraform fmt (all modules)
+PASS  terraform validate azure-entra
+PASS  terraform validate lab-k8s
+PASS  promtool check rules
+PASS  promtool test rules (alert unit tests)
+PASS  promtool check config
+PASS  amtool check-config
+PASS  otelcol validate
+PASS  ansible syntax deploy_aipir.yml
+PASS  ansible syntax drift_check.yml
+PASS  ansible syntax recover_boiler.yml
+PASS  ansible syntax recover_monitoring.yml
+PASS  ansible syntax recover_turbine.yml
+PASS  ansible syntax recover_water.yml
+PASS  kubeconform k8s/base (strict, 1.30)
+PASS  YAML parse (all deploy/*.yml)
+PASS  Grafana dashboard JSON
+PASS  bash syntax (scripts)
+SUMMARY pass=18 fail=0 skip=0

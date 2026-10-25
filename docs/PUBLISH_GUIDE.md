@@ -11,7 +11,7 @@ cd aipir
 python code/05_figures.py --final
 node code/06_document.js --final
 python code/08_readme.py --final
-python scripts/publish_gate.py . --allow-draft-in code/ framework/ scripts/ tests/ docs/PUBLISH_GUIDE.md docs/BUILD_SPEC.md   # must pass
+python scripts/publish_gate.py . --allow-draft-in code/ framework/ scripts/ tests/ docs/PUBLISH_GUIDE.md docs/BUILD_SPEC.md docs/training/   # must pass
 ```
 
 Code folders are allowed because source code legitimately contains words like DRAFT and
@@ -39,14 +39,14 @@ the gate before step 3.
 4. Check that the **ci** workflow passes in the Actions tab (unit tests, YAML, terraform validate).
 
 Alternative with a token: `export GITHUB_TOKEN=...` (classic token, `repo` scope) then
-`python scripts/publish_github.py --repo aipir --description "AI-Enabled Predictive Infrastructure Resilience framework for energy-sector control systems" --release v0.1.0`. Revoke the token afterwards.
+`python scripts/publish_github.py --repo aipir --description "AI-Enabled Predictive Infrastructure Resilience framework for energy-sector control systems" --release v0.2.0`. Revoke the token afterwards.
 
 ## 2. Zenodo DOI (10 min)
 
 1. Log in at https://zenodo.org with ORCID 0009-0009-2222-1318 (attaches your ORCID).
 2. Account > GitHub > switch on **aipir**.
-3. On GitHub: Releases > Draft a new release > tag `v0.1.0`, title
-   "AIPIR v0.1.0 - first public release", notes:
+3. On GitHub: Releases > Draft a new release > tag `v0.2.0`, title
+   "AIPIR v0.2.0 - first public release", notes:
    > First release of the AIPIR framework (Observe-Predict-Respond-Recover) and the replication
    > package for its validation on HAI 21.03 and HAI 20.07. Code MIT; derived data and models
    > CC BY-SA 4.0. See README and docs/LIMITATIONS.md.
@@ -57,7 +57,7 @@ Alternative with a token: `export GITHUB_TOKEN=...` (classic token, `repo` scope
    `node code/06_document.js --final`, add the DOI badge to the README; commit, push.
 
 Alternative with a token: `export ZENODO_SANDBOX_TOKEN=...` then
-`python scripts/zenodo_deposit.py --files aipir-v0.1.0.zip --metadata docs/zenodo_metadata.json --sandbox`,
+`python scripts/zenodo_deposit.py --files aipir-v0.2.0.zip --metadata docs/zenodo_metadata.json --sandbox`,
 inspect the sandbox record, then repeat with `ZENODO_TOKEN` and `--publish`.
 
 ## 3. arXiv preprint (20 min + moderation)

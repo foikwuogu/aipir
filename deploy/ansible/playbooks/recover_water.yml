@@ -1,0 +1,10 @@
+# AIPIR recovery playbook - P3 (water). Started by the AIPIR service after two-person approval:
+#   ansible-playbook -i inventory/<site>.yml playbooks/recover_water.yml -e @vars.json [--check --diff]
+- name: AIPIR recover P3 water
+  hosts: p3_water_gateway
+  gather_facts: false
+  serial: 1
+  vars:
+    aipir_process: P3
+  roles:
+    - ot_restore

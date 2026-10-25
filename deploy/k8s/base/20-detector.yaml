@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aipir-detector
+  namespace: aipir
+  labels: { app: aipir-detector, app.kubernetes.io/part-of: aipir }
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  strategy: { type: RollingUpdate, rollingUpdate: { maxUnavailable: 0, maxSurge: 1 } }
+  selector: { matchLabels: { app: aipir-detector } }
+  template:
+    metadata:
+      labels: { app: aipir-detector, app.kubernetes.io/part-of: aipir }
+      annotations: { prometheus.io/scrape: "true", prometheus.io/port: "9108" }
+    spec:
+      serviceAccountName: aipir-detector
+      automountServiceAccountToken: false
+      securityContext: { runAsNonRoot: true, runAsUser: 10001, fsGroup: 10001, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: detector
+          image: ghcr.io/OWNER/aipir:0.2.0
+          args: ["--model", "models/aipir_hai2103.joblib", "--replay", "/data/test2.csv.gz", "--speed", "60"]
+          ports: [{ name: http, containerPort: 9108 }]
+          env:
+            - { name: AIPIR_RECOVERY, value: dry-run }
+            - { name: AIPIR_AUTH_MODE, value: hs256 }          # rs256 with Entra ID for a pilot
+            - { name: AIPIR_ISSUER, value: aipir-lab }
+            - { name: AIPIR_AUDIENCE, value: "api://aipir" }
+            - { name: AIPIR_ENV, value: lab }
+            - { name: AIPIR_AUDIT_LOG, value: /var/log/aipir/audit.jsonl }
+            - { name: OTEL_EXPORTER_OTLP_ENDPOINT, value: "http://otel-collector.aipir.svc:4318" }
+            - name: AIPIR_LAB_SECRET
+              valueFrom: { secretKeyRef: { name: aipir-lab-secret, key: secret } }
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { cpu: "1", memory: 1Gi }
+          readinessProbe: { httpGet: { path: /healthz, port: http }, periodSeconds: 5 }
+          livenessProbe: { httpGet: { path: /healthz, port: http }, periodSeconds: 10, failureThreshold: 3 }
+          securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: [ALL] } }
+          volumeMounts:
+            - { name: telemetry, mountPath: /data, readOnly: true }
+            - { name: audit, mountPath: /var/log/aipir }
+      volumes:
+        - { name: telemetry, persistentVolumeClaim: { claimName: aipir-telemetry } }
+        - { name: audit, emptyDir: {} }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: aipir-telemetry, namespace: aipir }
+spec:
+  accessModes: [ReadOnlyMany]
+  resources: { requests: { storage: 1Gi } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: aipir-detector, namespace: aipir, labels: { app: aipir-detector } }
+spec:
+  selector: { app: aipir-detector }
+  ports: [{ name: http, port: 9108, targetPort: http }]
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata: { name: aipir-detector, namespace: aipir }
+spec:
+  minAvailable: 1
+  selector: { matchLabels: { app: aipir-detector } }

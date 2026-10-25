@@ -1,0 +1,31 @@
+# Scheduled configuration-drift check; fails (and so alerts in AWX/cron) on unapproved drift.
+- name: AIPIR configuration drift check
+  hosts: aipir_control
+  gather_facts: false
+  vars:
+    repo_root: "{{ playbook_dir }}/../../.."
+    report: "/tmp/aipir_drift_report.json"
+  tasks:
+    - name: Run drift check against the signed baseline
+      ansible.builtin.command:
+        cmd: >-
+          python3 -m aipir.drift check
+          --baseline {{ repo_root }}/deploy/drift/baseline.json
+          --pubkey {{ repo_root }}/deploy/drift/baseline_signing.pem.pub
+          --ledger {{ repo_root }}/deploy/drift/changes.jsonl
+          --out {{ report }}
+      environment:
+        PYTHONPATH: "{{ repo_root }}/framework"
+      register: drift
+      changed_when: false
+      failed_when: drift.rc not in [0, 3]
+      check_mode: false
+
+    - name: Show result
+      ansible.builtin.debug:
+        msg: "{{ drift.stdout_lines }}"
+
+    - name: Fail on unapproved drift
+      ansible.builtin.fail:
+        msg: "Unapproved configuration drift - see {{ report }} and deploy/RUNBOOK.md section 3."
+      when: drift.rc == 3

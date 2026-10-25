@@ -1,0 +1,18 @@
+route:
+  receiver: operator
+  group_by: [alertname, process]
+  group_wait: 0s
+  routes:
+    - matchers: ['alertname="AIPIRProcessAnomaly"']
+      receiver: recover
+      continue: true
+receivers:
+  - name: operator      # replace with the control-room paging integration
+  - name: recover       # Recover layer: AIPIR records the recovery request (workload identity)
+    webhook_configs:
+      - url: http://aipir:9108/recover
+        send_resolved: false
+        http_config:
+          authorization:
+            type: Bearer
+            credentials_file: /etc/alertmanager/secrets/relay.token

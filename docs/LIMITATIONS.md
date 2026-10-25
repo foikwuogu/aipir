@@ -46,3 +46,16 @@ Written before the discussion section of the manuscript so the paper cannot outr
 10. **Model portability.** Models are fitted per dataset version; sensor sets differ between
     versions, so a model is not transferred across versions. Saved models load only with the
     pinned scikit-learn version.
+11. **Zero-Trust and recovery are validated in a lab, not at a site.** The access rules, MFA
+    checks, two-person rule and audit chain are tested with lab-signed tokens
+    (`tests/integration/lab_stack_check.py`). The Entra ID module passes `terraform validate` but
+    was not applied to a tenant: its Conditional Access policy needs Entra ID P1 and a tenant
+    administrator. Ansible playbooks ran against localhost with placeholder site commands.
+12. **Infrastructure templates are validated, not deployed.** Terraform modules were validated
+    with OpenTofu 1.8 (Terraform-compatible) and Kubernetes manifests with kubeconform against
+    Kubernetes 1.30 schemas. No cluster was provisioned and the container image was not built in
+    the build environment (no Docker daemon); the Compose stack is untested as a whole.
+13. **The SOW's measured targets are open.** MTTD, MTTR, availability and misconfiguration targets,
+    and the 5 TB labelled dataset, can only come from the site pilot. The KPI and drift tools
+    compute those measures from site records; they contain no pilot data, and the synthetic
+    training records in `docs/training/` must never be reported as results.

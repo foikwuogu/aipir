@@ -1,0 +1,32 @@
+# Recover the AIPIR monitoring stack itself to its declared known-good state.
+# Prefers IaC (terraform/tofu apply of the environment); falls back to a Kubernetes rollback.
+- name: AIPIR recover monitoring stack
+  hosts: aipir_control
+  gather_facts: false
+  vars:
+    aipir_process: MON
+  tasks:
+    - name: Guard - two-person approval
+      ansible.builtin.assert:
+        that:
+          - aipir_approved_by is defined and aipir_approved_by | length > 0
+          - aipir_approved_by != (aipir_requested_by | default(''))
+        fail_msg: "Recovery refused: two-person rule."
+
+    - name: Rebuild from IaC (terraform apply to the declared state)
+      ansible.builtin.command:
+        cmd: "terraform -chdir={{ aipir_tf_dir }} apply -auto-approve -input=false"
+      when: aipir_tf_dir | length > 0
+      changed_when: true
+
+    - name: Roll the detector back one revision (no IaC dir given)
+      ansible.builtin.command:
+        cmd: "kubectl -n {{ aipir_namespace }} rollout undo deployment/aipir-detector"
+      when: aipir_tf_dir | length == 0
+      changed_when: true
+
+    - name: Wait for the rollout
+      ansible.builtin.command:
+        cmd: "kubectl -n {{ aipir_namespace }} rollout status deployment/aipir-detector --timeout=180s"
+      when: aipir_tf_dir | length == 0 and not ansible_check_mode
+      changed_when: false

@@ -1,0 +1,21 @@
+# SITE inventory template. Copy to site.yml (git-ignored), fill in hosts and site commands, and
+# take it through the plant's management-of-change process before AIPIR_RECOVERY=execute.
+# Hosts are engineering workstations / OT jump hosts that already hold approved vendor tooling;
+# Ansible never writes to a controller directly.
+all:
+  vars:
+    aipir_site: "<site name>"
+    ansible_user: "<service account with MFA-protected vault credentials>"
+  children:
+    p1_boiler_gateway:
+      hosts: { "<p1-ews-hostname>": {} }
+      vars:
+        site_snapshot_cmd: "<command that exports current P1 setpoints to a file>"
+        site_restore_cmd: "<command that restores P1 setpoints from the signed baseline file>"
+        site_verify_cmd: "<command that exits 0 when P1 loops track their setpoints>"
+    p2_turbine_gateway:
+      hosts: { "<p2-ews-hostname>": {} }
+    p3_water_gateway:
+      hosts: { "<p3-ews-hostname>": {} }
+    aipir_control:
+      hosts: { "<host with kubectl/terraform access to the AIPIR cluster>": {} }

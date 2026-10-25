@@ -1,9 +1,0 @@
-global:
-  scrape_interval: 5s
-  evaluation_interval: 5s
-rule_files: ["/etc/prometheus/alert_rules.yml"]
-alerting:
-  alertmanagers: [{ static_configs: [{ targets: ["alertmanager:9093"] }] }]
-scrape_configs:
-  - job_name: aipir
-    static_configs: [{ targets: ["aipir:9108"] }]

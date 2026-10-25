@@ -1,0 +1,154 @@
+{
+  "checks": [
+    {
+      "check": "otel collector started",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "service started",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "health is public",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "metrics without token -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "metrics with scraper workload token -> 200",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "tampered signature -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "expired token -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "token from another issuer key -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "viewer can read status",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "viewer cannot request recovery -> 403",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "operator without MFA cannot request -> 403",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "workload role is ignored for humans -> 403",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Alertmanager relay can request recovery",
+      "pass": true,
+      "detail": "pending_approval"
+    },
+    {
+      "check": "relay cannot approve -> 403",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "operator cannot approve -> 403",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "approver without MFA -> 403",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "operator with MFA can request",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "two-person rule: requester cannot approve own -> 403",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "approver with MFA runs Ansible playbook (check mode)",
+      "pass": true,
+      "detail": "status=succeeded, rc=0, check_mode=True, 3.3s"
+    },
+    {
+      "check": "approved twice -> 409",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "full replay scored",
+      "pass": true,
+      "detail": "aipir_rows_processed_total 39601"
+    },
+    {
+      "check": "audit hash chain intact",
+      "pass": true,
+      "detail": "31 entries"
+    },
+    {
+      "check": "denials recorded in audit",
+      "pass": true,
+      "detail": "11 denials"
+    },
+    {
+      "check": "deleting an audit entry is detected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "OTel metrics reach collector (aipir.anomaly.score)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "OTel alarm gauge per process",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "OTel alarm spans exported",
+      "pass": true,
+      "detail": "9 occurrences"
+    },
+    {
+      "check": "OTel recovery span exported",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "OTel audit logs exported",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "passed": 29,
+  "total": 29,
+  "otel_collector": true,
+  "ansible": true,
+  "date": "2026-10-24"
+}

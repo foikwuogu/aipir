@@ -1,0 +1,63 @@
+# OpenTelemetry Collector for AIPIR (otelcol-contrib >= 0.111).
+# In: OTLP from the detector (metrics, traces, logs).
+# Out: Prometheus exposition on :8889 (scraped by Prometheus), traces and logs to the debug
+# exporter by default. Point `otlphttp/backend` at your trace/log store (Jaeger, Tempo, Loki,
+# Azure Monitor, Splunk) and add it to the pipelines.
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+processors:
+  memory_limiter:
+    check_interval: 5s
+    limit_percentage: 80
+    spike_limit_percentage: 20
+  batch:
+    timeout: 5s
+  resource:
+    attributes:
+      - key: aipir.layer
+        value: observe
+        action: upsert
+  # Zero-Trust hygiene: never forward token material if a client attaches it by mistake.
+  attributes/scrub:
+    actions:
+      - key: authorization
+        action: delete
+      - key: http.request.header.authorization
+        action: delete
+
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    namespace: otel
+    resource_to_telemetry_conversion:
+      enabled: true
+  debug:
+    verbosity: basic
+  file/evidence:
+    path: /tmp/aipir-otel-evidence.jsonl
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheus, debug]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/scrub, resource, batch]
+      exporters: [debug, file/evidence]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/scrub, resource, batch]
+      exporters: [debug, file/evidence]

@@ -1,0 +1,8 @@
+# Defaults shared by all AIPIR recovery playbooks.
+aipir_evidence_dir: "/tmp/aipir-recovery-evidence"
+aipir_namespace: aipir
+aipir_tf_dir: ""            # set to deploy/terraform/environments/<env> to rebuild via IaC
+# Lab placeholders - replaced per site in inventory/site.yml
+site_snapshot_cmd: "echo LAB snapshot {{ aipir_process }}"
+site_restore_cmd: "echo LAB restore {{ aipir_process }} from {{ baseline_file }}"
+site_verify_cmd: "echo LAB verify {{ aipir_process }}"

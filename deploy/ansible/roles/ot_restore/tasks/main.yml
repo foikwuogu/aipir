@@ -1,0 +1,72 @@
+# Generic, process-agnostic restore: guard -> snapshot -> verify baseline integrity -> restore
+# -> verify -> evidence. All plant-facing actions are the site's own commands.
+- name: Guard - two-person approval must be present and distinct
+  ansible.builtin.assert:
+    that:
+      - aipir_request_id is defined and aipir_request_id | length > 0
+      - aipir_approved_by is defined and aipir_approved_by | length > 0
+      - aipir_requested_by is defined
+      - aipir_approved_by != aipir_requested_by
+    fail_msg: "Recovery refused: needs an approver who is not the requester (two-person rule)."
+
+- name: Evidence folder
+  ansible.builtin.file:
+    path: "{{ aipir_evidence_dir }}/{{ aipir_request_id }}"
+    state: directory
+    mode: "0750"
+  check_mode: false
+  delegate_to: localhost
+
+- name: Snapshot current state (site command)
+  ansible.builtin.command: "{{ site_snapshot_cmd }}"
+  register: snapshot
+  changed_when: false
+  check_mode: false
+
+- name: Read baseline checksum file
+  ansible.builtin.slurp:
+    src: "{{ baseline_file }}.sha256"
+  register: expected_sha
+  delegate_to: localhost
+
+- name: Hash the baseline file
+  ansible.builtin.stat:
+    path: "{{ baseline_file }}"
+    checksum_algorithm: sha256
+  register: baseline_stat
+  delegate_to: localhost
+
+- name: Refuse a baseline that does not match its recorded hash
+  ansible.builtin.assert:
+    that:
+      - baseline_stat.stat.exists
+      - baseline_stat.stat.checksum == (expected_sha.content | b64decode | trim)
+    fail_msg: "Baseline {{ baseline_file }} failed its integrity check - not restoring."
+
+- name: Restore from the signed baseline (site command; skipped in check mode)
+  ansible.builtin.command: "{{ site_restore_cmd }}"
+  register: restore
+  changed_when: true
+
+- name: Verify process is back under control (site command)
+  ansible.builtin.command: "{{ site_verify_cmd }}"
+  register: verify
+  retries: "{{ verify_retries }}"
+  delay: "{{ verify_delay_s }}"
+  until: verify.rc == 0
+  changed_when: false
+  check_mode: false
+
+- name: Write evidence record
+  ansible.builtin.copy:
+    dest: "{{ aipir_evidence_dir }}/{{ aipir_request_id }}/{{ aipir_process }}_{{ inventory_hostname }}.json"
+    mode: "0640"
+    content: "{{ {'request_id': aipir_request_id, 'process': aipir_process, 'host': inventory_hostname,
+                  'requested_by': aipir_requested_by, 'approved_by': aipir_approved_by,
+                  'check_mode': ansible_check_mode, 'baseline': baseline_file,
+                  'baseline_sha256': baseline_stat.stat.checksum,
+                  'snapshot_stdout': snapshot.stdout | default(''),
+                  'restore_rc': restore.rc | default(None), 'verify_rc': verify.rc | default(None),
+                  'top_sensors': aipir_top_sensors | default([])} | to_nice_json }}"
+  check_mode: false
+  delegate_to: localhost

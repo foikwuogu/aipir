@@ -1,0 +1,30 @@
+# AIPIR role-based access policy (least privilege, deny by default).
+# Role names match the app roles declared for the AIPIR app registration in the identity provider
+# (deploy/terraform/modules/entra-zero-trust). A token's `roles` claim selects these entries.
+roles:
+  aipir.viewer:            # control-room and engineering staff who watch dashboards
+    permissions: [metrics:read, status:read]
+  aipir.operator:          # can request a recovery and acknowledge alerts, cannot execute one
+    permissions: [metrics:read, status:read, recovery:request, alerts:ack]
+  aipir.recovery-approver: # second person who approves an executed recovery
+    permissions: [metrics:read, status:read, recovery:approve]
+  aipir.admin:             # manages configuration and drift baselines; no recovery rights
+    permissions: [metrics:read, status:read, config:write, drift:baseline]
+  aipir.alert-relay:       # workload identity used by Alertmanager's webhook
+    workload: true
+    permissions: [recovery:request]
+  aipir.metrics-scraper:   # workload identity used by Prometheus / the OTel Collector
+    workload: true
+    permissions: [metrics:read]
+
+# Human actions that require proof of multi-factor sign-in (token amr claim contains "mfa").
+mfa_required: [recovery:request, recovery:approve, config:write, drift:baseline, alerts:ack]
+
+# Actions no workload identity may perform, whatever roles it carries.
+workload_forbidden: [recovery:approve, config:write, drift:baseline]
+
+# Actions that need a different person from the one who requested them.
+two_person: [recovery:approve]
+
+# Unauthenticated endpoints (liveness only; carries no data).
+public: [health:read]

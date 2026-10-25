@@ -1,0 +1,16 @@
+# Deploy or update AIPIR from its IaC definition (the same path used for recovery).
+- name: Deploy AIPIR via IaC
+  hosts: aipir_control
+  gather_facts: false
+  vars:
+    tf_dir: "{{ playbook_dir }}/../../terraform/environments/lab-k8s"
+  tasks:
+    - name: terraform init
+      ansible.builtin.command: "terraform -chdir={{ tf_dir }} init -input=false"
+      changed_when: false
+    - name: terraform plan
+      ansible.builtin.command: "terraform -chdir={{ tf_dir }} plan -input=false -out=aipir.tfplan"
+      changed_when: false
+    - name: terraform apply (skipped in check mode)
+      ansible.builtin.command: "terraform -chdir={{ tf_dir }} apply -input=false aipir.tfplan"
+      changed_when: true

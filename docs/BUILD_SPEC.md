@@ -74,3 +74,17 @@ ASSUMPTIONS:    Proceeding without confirmation on V1-V5 using the defaults abov
                 run in lab mode only. "Downtime reduction" is reported as a scenario, never as a
                 measured result.
 ```
+
+## v0.2 additions (2026-10-24)
+
+```
+ADDED:          Zero-Trust controls (tokens, RBAC policy, MFA, two-person rule, hash-chained audit;
+                Entra ID and Kubernetes RBAC templates); OpenTelemetry export + Collector config;
+                Ansible recovery hook and playbooks; configuration-drift check; IaC template
+                library with validate.sh; replication playbook with KPI protocol and calculator;
+                training package; SOW traceability.
+VALIDATION:     unit tests; lab_stack_check.py against a live OTel Collector and ansible-core;
+                deploy/validate.sh with OpenTofu, promtool, amtool, otelcol, ansible, kubeconform.
+NOT CHANGED:    detection models, data, results (v0.1 numbers stand).
+OPEN:           all SOW measured targets and the 5 TB dataset - site pilot only.
+```

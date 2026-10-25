@@ -1,0 +1,10 @@
+# LAB inventory: every group points at localhost with a local connection, and the site restore
+# commands are harmless echo placeholders. Nothing here touches a control system.
+all:
+  vars:
+    aipir_site: lab
+  children:
+    p1_boiler_gateway:  { hosts: { lab-p1: { ansible_host: 127.0.0.1, ansible_connection: local } } }
+    p2_turbine_gateway: { hosts: { lab-p2: { ansible_host: 127.0.0.1, ansible_connection: local } } }
+    p3_water_gateway:   { hosts: { lab-p3: { ansible_host: 127.0.0.1, ansible_connection: local } } }
+    aipir_control:      { hosts: { lab-ctl: { ansible_host: 127.0.0.1, ansible_connection: local } } }

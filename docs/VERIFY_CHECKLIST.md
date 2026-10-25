@@ -40,6 +40,15 @@ these are yours. Nothing is published until every box is ticked.
 - [ ] Framing: the paper reports AIPIR's weaknesses (event recall vs baselines; HAI 20.07)
       as plainly as its strengths, and S3 is labelled exploratory
 
+## Platform (v0.2) checks
+- [ ] `python tests/integration/lab_stack_check.py` passes on your machine (all checks)
+- [ ] `./deploy/validate.sh` passes with no FAIL; note which tools were SKIPPED
+- [ ] `python tests/integration/drift_demo.py` passes
+- [ ] Read `deploy/zero-trust/rbac_policy.yaml`: the roles and MFA rules match how your pilot site should work
+- [ ] Ran Labs 1, 3 and 5 from `docs/training/` yourself; the deck numbers match `paper/stats.json`
+- [ ] `docs/SOW_TRACEABILITY.md` is accurate; nothing in any document presents lab or synthetic results as pilot results
+- [ ] The SOW and the paper use the same form of your name
+
 ## Before it goes public
 - [ ] README, LIMITATIONS and manuscript rewritten in your own voice; nothing you cannot defend
 - [ ] AI-assistance disclosure in the manuscript is accurate

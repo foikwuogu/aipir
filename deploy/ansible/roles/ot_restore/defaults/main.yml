@@ -1,0 +1,3 @@
+baseline_file: "{{ playbook_dir }}/../baselines/lab_{{ aipir_process }}.yml"
+verify_retries: 10
+verify_delay_s: 30

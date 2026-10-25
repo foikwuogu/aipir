@@ -1,0 +1,28 @@
+# Hourly configuration-drift check against the declared manifests (read-only service account).
+# The drift baseline and declared manifests are mounted from ConfigMaps created at deploy time.
+apiVersion: batch/v1
+kind: CronJob
+metadata: { name: aipir-drift-check, namespace: aipir }
+spec:
+  schedule: "17 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          serviceAccountName: aipir-drift
+          restartPolicy: Never
+          securityContext: { runAsNonRoot: true, runAsUser: 10001, seccompProfile: { type: RuntimeDefault } }
+          containers:
+            - name: drift
+              image: ghcr.io/OWNER/aipir:0.2.0
+              command: ["python", "-m", "aipir.drift", "check", "--k8s-declared", "/etc/aipir/declared", "--kubectl",
+                        "--ledger", "/var/lib/aipir/changes.jsonl", "--out", "/var/lib/aipir/drift_report.json"]
+              securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: [ALL] } }
+              volumeMounts:
+                - { name: declared, mountPath: /etc/aipir/declared, readOnly: true }
+                - { name: state, mountPath: /var/lib/aipir }
+          volumes:
+            - { name: declared, configMap: { name: aipir-declared-manifests } }
+            - { name: state, emptyDir: {} }

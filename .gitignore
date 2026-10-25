@@ -7,3 +7,10 @@ __pycache__/
 *.tfstate*
 paper/*.pdf.tmp
 scratch/
+deploy/compose/.lab/
+aipir_audit.jsonl
+*.jsonl.lock
+deploy/drift/baseline_signing.pem
+deploy/drift/baseline.json
+deploy/drift/changes.jsonl
+deploy/observability/grafana/grafana-oidc.env

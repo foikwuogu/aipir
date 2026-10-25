@@ -1,0 +1,10 @@
+# AIPIR recovery playbook - P2 (turbine). Started by the AIPIR service after two-person approval:
+#   ansible-playbook -i inventory/<site>.yml playbooks/recover_turbine.yml -e @vars.json [--check --diff]
+- name: AIPIR recover P2 turbine
+  hosts: p2_turbine_gateway
+  gather_facts: false
+  serial: 1
+  vars:
+    aipir_process: P2
+  roles:
+    - ot_restore
