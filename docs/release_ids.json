@@ -1,5 +1,6 @@
 {
-  "repository_url": "[repository URL - set on publish]",
-  "doi": "[DOI - minted by Zenodo on publish]",
+  "repository_url": "",
+  "doi": "[DOI - reserved on the Zenodo New-version draft]",
+  "concept_doi": "",
   "release_date": "[date of release - set on publish]"
 }

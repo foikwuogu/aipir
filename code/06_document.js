@@ -24,8 +24,8 @@ const LAB = JSON.parse(fs.readFileSync(path.join(ROOT, "data/processed/lab_stack
 const VAL = fs.readFileSync(path.join(ROOT, "data/processed/iac_validation.txt"), "utf8").match(/SUMMARY pass=(\d+) fail=(\d+) skip=(\d+)/);
 const NTPL = (fs.readFileSync(path.join(ROOT, "deploy/README.md"), "utf8").match(/^\| \d+ \|/gm) || []).length;
 const IDS = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/release_ids.json"), "utf8"));
-if (FINAL && /\[/.test(IDS.repository_url + IDS.doi)) {
-  console.error("Fill docs/release_ids.json (repository URL and DOI) before a --final build."); process.exit(1);
+if (FINAL && (/\[/.test(IDS.doi + IDS.release_date) || !IDS.doi)) {
+  console.error("Fill docs/release_ids.json (DOI and release date) before a --final build."); process.exit(1);
 }
 
 // ---------- number helpers ----------
@@ -185,7 +185,7 @@ const conclusion = [
 const roles = people.map((p) => `${p.name}: ${p.roles.join(", ")}.`).join(" ");
 const declarations = [
   P([B("Data availability. "), `HAI datasets are available at https://github.com/icsdataset/hai under CC BY-SA 4.0. Derived scores, events, models and figures are released with the code under CC BY-SA 4.0.`]),
-  P([B("Code availability. "), `All code, deployment definitions and the replication package: ${IDS.repository_url} (MIT license), archived at ${IDS.doi}.`]),
+  P([B("Code availability. "), `All code, deployment definitions and the replication package are archived at ${IDS.doi}${IDS.concept_doi ? ` (this version; all versions: ${IDS.concept_doi})` : ""}. Code is MIT-licensed; derived data are CC BY-SA 4.0.${IDS.repository_url ? ` Development repository: ${IDS.repository_url}.` : ""}`]),
   P([B("Author contributions (CRediT). "), roles + V("V4")]),
   P([B("Competing interests. "), `The authors declare no competing interests.${V("V4/V6")}`]),
   P([B("Funding. "), `This work received no specific funding.${V("V4")}`]),

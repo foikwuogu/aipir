@@ -8,6 +8,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FINAL = "--final" in sys.argv
 S = json.load(open(os.path.join(ROOT, "paper", "stats.json")))
 A = json.load(open(os.path.join(ROOT, "AUTHORS.json")))
+IDS = json.load(open(os.path.join(ROOT, "docs", "release_ids.json")))
+DOI = IDS["doi"].replace("https://doi.org/", "")
+CONCEPT = (IDS.get("concept_doi") or "").replace("https://doi.org/", "")
 R = lambda v, d: S["results"][f"{v}|test|{d}"]  # noqa: E731
 a, b = "hai-21.03", "hai-20.07"
 c, dt = S["downtime"]["central"], S["downtime"]
@@ -33,6 +36,8 @@ status = ("**Status: v0.2.0 released** - see the DOI badge and CITATION.cff." if
 authors = "; ".join(p["name"] for p in A["authors"] + A["collaborators"])
 s1 = c["S1_reduction_pct"]
 md = f"""# AIPIR - AI-Enabled Predictive Infrastructure Resilience Framework
+
+[![Zenodo DOI](https://zenodo.org/badge/DOI/{CONCEPT or DOI}.svg)](https://doi.org/{CONCEPT or DOI})
 
 {status}
 
@@ -157,7 +162,7 @@ CC BY 4.0. Details in `LICENSE-DATA.md`.
 ## Citation and contact
 
 {authors}. *AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework*, v0.2.0, 2026.
-See `CITATION.cff`. Maintainer: {A['authors'][0]['name']} ({A['authors'][0]['email']},
+doi:{DOI}{f" (all versions: doi:{CONCEPT})" if CONCEPT else ""}. See `CITATION.cff`. Maintainer: {A['authors'][0]['name']} ({A['authors'][0]['email']},
 ORCID {A['authors'][0]['orcid']}).
 """
 open(os.path.join(ROOT, "README.md"), "w").write(md)
