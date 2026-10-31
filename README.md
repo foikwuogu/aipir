@@ -101,6 +101,6 @@ CC BY 4.0. Details in `LICENSE-DATA.md`.
 
 ## Citation and contact
 
-Friday Ogochukwu Ikwuogu; Abidemi Orimogunje; Eria Othieno Pinyi; David Mike-Ewewie. *AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework*, v0.1.0, 2026.
+Friday Ogochukwu Ikwuogu; Silas Abutu; Ayodeji Olutosin Ejiade; Fejiro Eni. *AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework*, v0.1.0, 2026.
 doi:10.5281/zenodo.23846615. See `CITATION.cff`. Maintainer: Friday Ogochukwu Ikwuogu (Friday.ikwuogu@gmail.com,
 ORCID 0009-0009-2222-1318).
