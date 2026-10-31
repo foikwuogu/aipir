@@ -67,7 +67,7 @@ inspect the sandbox record, then repeat with `ZENODO_TOKEN` and `--publish`.
 - **Files:** export `paper/AIPIR_manuscript.docx` to PDF (Word: File > Save as PDF) after the
   final build; arXiv accepts PDF for documents not produced from TeX.
 - **Metadata:** title as in the manuscript; authors in this order:
-  Friday Ogochukwu Ikwuogu; Abidemi Orimogunje; Eria Othieno Pinyi; David Mike-Ewewie.
+  Friday Ogochukwu Ikwuogu; Silas Abutu; Ayodeji Olutosin Ejiade; Fejiro Eni.
   Abstract: paste from the manuscript (arXiv limit 1,920 characters; trim if needed).
 - **Comments field:** "N pages, 6 figures, 3 tables. Code and data: <GitHub URL>; DOI <Zenodo DOI>".
 - **License:** CC BY 4.0.
