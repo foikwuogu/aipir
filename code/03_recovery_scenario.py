@@ -3,7 +3,7 @@
 
 This is a SCENARIO MODEL, not a measurement. Time-to-detect and detected/missed status
 per attack come from 02_build (measured on held-out HAI data). Recovery and discovery
-times are ASSUMPTIONS [VERIFY V1], swept over ranges so the conclusion's dependence
+times are ASSUMPTIONS (approved by the author, 2026-10-31), swept over ranges so the conclusion's dependence
 on them is visible.
 
 Per held-out attack event:
@@ -30,7 +30,7 @@ ROOT = os.path.dirname(HERE)
 OUT = os.path.join(ROOT, "data", "processed")
 STATS = os.path.join(ROOT, "paper", "stats.json")
 
-# [VERIFY V1] central values and ranges, hours
+# Central values and ranges, hours (author-approved assumptions, 2026-10-31)
 CENTRAL = {"r_manual_h": 4.0, "r_auto_h": 0.25, "t_discover_h": 24.0}
 RANGES = {"r_manual_h": [2.0, 4.0, 6.0, 8.0],
           "r_auto_h": [5 / 60, 0.25, 0.5],

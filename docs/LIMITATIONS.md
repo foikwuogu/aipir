@@ -26,7 +26,7 @@ Written before the discussion section of the manuscript so the paper cannot outr
    detectors' rates.
 5. **Downtime is a scenario, not a measurement.** Time-to-detect is measured; recovery times
    (manual and IaC/playbook-assisted) and the time to discover a missed attack are assumptions
-   [VERIFY V1], swept over ranges. No recovery was executed against a control system. The
+   chosen by the authors, swept over ranges. No recovery was executed against a control system. The
    scenario's totals are dominated by missed attacks, so they mainly reflect event recall and the
    assumed discovery time.
 6. **Recover layer validated for configuration, not for effect.** Terraform, Kubernetes and
