@@ -1,5 +1,7 @@
 # AIPIR - AI-Enabled Predictive Infrastructure Resilience Framework
 
+[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23846615.svg)](https://doi.org/10.5281/zenodo.23846615)
+
 **Status: DRAFT v0.1.0 - results not yet verified by the authors; do not cite.**
 
 AIPIR is an open, cloud-native framework that connects **detection, response and recovery** for
@@ -100,5 +102,5 @@ CC BY 4.0. Details in `LICENSE-DATA.md`.
 ## Citation and contact
 
 Friday Ogochukwu Ikwuogu; Abidemi Orimogunje; Eria Othieno Pinyi; David Mike-Ewewie. *AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework*, v0.1.0, 2026.
-See `CITATION.cff`. Maintainer: Friday Ogochukwu Ikwuogu (Friday.ikwuogu@gmail.com,
+doi:10.5281/zenodo.23846615. See `CITATION.cff`. Maintainer: Friday Ogochukwu Ikwuogu (Friday.ikwuogu@gmail.com,
 ORCID 0009-0009-2222-1318).

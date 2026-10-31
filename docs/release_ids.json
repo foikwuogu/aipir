@@ -1,5 +1,5 @@
 {
-  "repository_url": "[repository URL - set on publish]",
-  "doi": "[DOI - minted by Zenodo on publish]",
+  "repository_url": "",
+  "doi": "https://doi.org/10.5281/zenodo.23846615",
   "release_date": "[date of release - set on publish]"
 }

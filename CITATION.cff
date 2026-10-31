@@ -23,8 +23,7 @@ authors:
     email: "mike_d63291@utpb.edu"
     affiliation: "Computer Science Department, University of Texas Permian Basin, Odessa, Texas, USA"
 license: MIT
-repository-code: "https://github.com/[repository URL - set on publish]"
-doi: "[DOI - minted by Zenodo on publish]"
+doi: "10.5281/zenodo.23846615"
 keywords:
   - industrial control systems
   - anomaly detection
