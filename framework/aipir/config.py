@@ -5,12 +5,12 @@ held-out test file (test2-test5) or HAI 20.07 was scored. See docs/LIMITATIONS.m
 """
 from .detectors import AIPIRPredictive, IForest, PCAResidual, StaticLimits
 
-# Alarm logic shared by all detectors [VERIFY V3: grace window and debounce]
+# Alarm logic shared by all detectors (author-approved, 2026-10-31)
 MERGE_GAP_S = 30      # alarm runs closer than this are one episode
 MIN_DUR_S = 5         # an episode must persist this long to be raised (debounce)
 GRACE_S = 60          # an alarm up to 60 s after an attack ends still counts as detecting it
 
-# Threshold calibration target on held-out normal data [VERIFY V2]
+# Threshold calibration target on held-out normal data (author-approved, 2026-10-31)
 FA_BUDGET_PER_DAY = 1.0
 TRAIN_EXCLUDE_PAD_S = 600  # seconds after any labelled training second also excluded
 FIT_FRACTION = 0.8    # first 80 % of each normal file fits models; last 20 % calibrates thresholds

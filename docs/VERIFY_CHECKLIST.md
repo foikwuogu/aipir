@@ -26,12 +26,12 @@ these are yours. Nothing is published until every box is ticked.
 - [ ] Every number in the manuscript traces to `paper/stats.json` (06_document reads it)
 
 ## Judgment calls to own (edit config, rerun, or record agreement)
-- [ ] **V1 Recovery-time assumptions** (code/03_recovery_scenario.py): manual 2-8 h (central 4 h),
+- [x] **V1 Recovery-time assumptions** (code/03_recovery_scenario.py): manual 2-8 h (central 4 h),
       automated 5-30 min (central 15 min), missed-attack discovery 8-72 h (central 24 h).
       Replace with values you can defend from experience or a cited source.
-- [ ] **V2 False-alarm budget** 1 alarm episode/day on normal data (framework/aipir/config.py)
-- [ ] **V3 Alarm logic**: 5 s debounce, 30 s merge gap, 60 s grace window
-- [ ] **V4 Co-authors and CRediT roles** in AUTHORS.json; each co-author has read and approved
+- [x] **V2 False-alarm budget** 1 alarm episode/day on normal data (framework/aipir/config.py)
+- [x] **V3 Alarm logic**: 5 s debounce, 30 s merge gap, 60 s grace window
+- [x] **V4 Co-authors and CRediT roles** in AUTHORS.json; each co-author has read and approved
       the manuscript and confirmed their listed role
 - [ ] **V5 Licenses**: MIT code, CC BY-SA 4.0 derived data (forced by HAI), CC BY 4.0 paper
 - [ ] **V6 No employer or operator data**: confirm nothing from any employer or client

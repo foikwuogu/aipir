@@ -15,9 +15,7 @@ python scripts/publish_gate.py . --allow-draft-in code/ framework/ scripts/ test
 ```
 
 Code folders are allowed because source code legitimately contains words like DRAFT and
-square brackets; the `[VERIFY V1-V3]` comments in `code/03_recovery_scenario.py` and
-`framework/aipir/config.py` still show as warnings - delete them once you have ruled on those
-values. The gate blocks on the bracketed placeholders in `CITATION.cff`,
+square brackets. The gate blocks on the bracketed placeholders in `CITATION.cff`,
 `docs/zenodo_metadata.json` and `docs/release_ids.json` (the `--final` manuscript build refuses
 to run until release_ids.json is filled). Fill them in the
 order below (GitHub URL first, then DOI), rerun `node code/06_document.js --final`, and rerun
