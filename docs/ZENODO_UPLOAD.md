@@ -11,7 +11,9 @@ manuscript's code-availability statement.
 
 ```bash
 git switch release/v0.1.0
+python scripts/set_release_ids.py --doi 10.5281/zenodo.23846615 --repo https://github.com/<user>/aipir
 ./scripts/make_zenodo_release.sh 2026-MM-DD      # the date you will press Publish
+git add -A && git commit -m "Release v0.1.0"
 ```
 
 The script removes the DRAFT stamps, rebuilds the figures, manuscript and README, runs the
@@ -40,7 +42,7 @@ publish gate, and writes `../aipir-v0.1.0.zip`. It stops if anything is still ma
 | Version | 0.1.0 |
 | Language | English |
 | Related works | "References", DOI **10.1145/3474718.3474719** (HAI dataset paper). After GitHub or arXiv exist, also add "Is supplemented by" with the repository URL or arXiv ID. |
-| Software: repository URL | Leave blank unless the GitHub repository is public already |
+| Software: repository URL | https://github.com/<user>/aipir (the repository is created empty first, so the URL is known) |
 | Software: programming language | Python |
 | Funding | Leave blank (no funding) |
 | Access | Public; files public |
