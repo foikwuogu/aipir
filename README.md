@@ -2,7 +2,7 @@
 
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23846615.svg)](https://doi.org/10.5281/zenodo.23846615)
 
-**Status: DRAFT v0.1.0 - results not yet verified by the authors; do not cite.**
+**Status: v0.1.0 released** - see the DOI badge and CITATION.cff.
 
 AIPIR is an open, cloud-native framework that connects **detection, response and recovery** for
 energy-sector control systems in one reproducible loop:

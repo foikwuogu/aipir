@@ -16,6 +16,11 @@
   "version": "0.1.0",
   "related_identifiers": [
     {
+      "identifier": "https://github.com/foikwuogu/aipir",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
       "identifier": "10.1145/3474718.3474719",
       "relation": "references",
       "scheme": "doi"

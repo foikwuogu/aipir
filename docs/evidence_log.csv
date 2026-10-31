@@ -1,2 +1,3 @@
 date,artifact_or_event,type,venue_or_host,link_or_doi,status,prong_tags,metrics_snapshot,files_saved,notes
-2026-10-31,AIPIR v0.1.0 replication package,software,Zenodo,10.5281/zenodo.23846615,reserved,,,,DOI reserved on Zenodo draft; publish after verification checklist
+2026-10-31,AIPIR v0.1.0 replication package,software,Zenodo,10.5281/zenodo.23846615,reserved,,,,DOI reserved on Zenodo draft; final package built 2026-10-31
+2026-10-31,AIPIR v0.1.0 source,software,GitHub,https://github.com/foikwuogu/aipir/releases/tag/v0.1.0,ready-to-push,,,,Tag v0.1.0 on release/v0.1.0
