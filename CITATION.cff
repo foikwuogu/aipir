@@ -3,7 +3,7 @@ message: "If you use this software or its results, please cite it as below, and 
 type: software
 title: "AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework"
 version: "0.2.0"
-date-released: "[date of release - set on publish]"
+date-released: "2026-10-31"
 authors:
   - family-names: "Ikwuogu"
     given-names: "Friday Ogochukwu"
@@ -23,8 +23,15 @@ authors:
     email: "fejiro.eni@gmail.com"
     affiliation: "Masters Big Data Technology, University of Westminster, London"
 license: MIT
-repository-code: "https://github.com/[repository URL - set on publish]"
-doi: "[DOI - minted by Zenodo on publish]"
+doi: "10.5281/zenodo.23849300"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23846614"
+    description: "Concept DOI (all versions)"
+  - type: doi
+    value: "10.5281/zenodo.23849300"
+    description: "This version"
+repository-code: "https://github.com/foikwuogu/aipir"
 keywords:
   - industrial control systems
   - anomaly detection

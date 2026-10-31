@@ -3,11 +3,29 @@
   "title": "AIPIR: AI-Enabled Predictive Infrastructure Resilience Framework (v0.2.0)",
   "description": "<p>Open, cloud-native framework linking detection, response and recovery for energy-sector control systems: Prometheus and OpenTelemetry observability, Zero-Trust access control (OIDC/Entra ID, RBAC, MFA, two-person approval, hash-chained audit), Ansible recovery playbooks, configuration-drift checking, an IaC template library, a replication playbook and a training package, a ridge-forecaster anomaly detector, calibrated and routed alerts, and Terraform/Kubernetes recovery definitions. Includes the full replication package for its validation on the HAI 21.03 and HAI 20.07 ICS security datasets (hardware-in-the-loop power-generation testbed) against static limits, PCA and Isolation Forest baselines. Code MIT; derived data and models CC BY-SA 4.0 (from HAI). See README, docs/LIMITATIONS.md and paper/AIPIR_manuscript.</p>",
   "license": "mit",
-  "keywords": ["industrial control systems", "anomaly detection", "critical infrastructure resilience", "energy sector", "predictive analytics", "observability", "infrastructure as code", "HAI dataset"],
+  "keywords": [
+    "industrial control systems",
+    "anomaly detection",
+    "critical infrastructure resilience",
+    "energy sector",
+    "predictive analytics",
+    "observability",
+    "infrastructure as code",
+    "HAI dataset"
+  ],
   "version": "0.2.0",
   "related_identifiers": [
-    {"identifier": "[repository URL - set on publish]", "relation": "isSupplementTo", "scheme": "url"},
-    {"identifier": "10.1145/3474718.3474719", "relation": "references", "scheme": "doi"}
+    {
+      "identifier": "https://github.com/foikwuogu/aipir",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.1145/3474718.3474719",
+      "relation": "references",
+      "scheme": "doi"
+    }
   ],
-  "access_right": "open"
+  "access_right": "open",
+  "doi": "10.5281/zenodo.23849300"
 }

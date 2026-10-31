@@ -1,6 +1,6 @@
 {
-  "repository_url": "",
-  "doi": "[DOI - reserved on the Zenodo New-version draft]",
-  "concept_doi": "",
-  "release_date": "[date of release - set on publish]"
+  "repository_url": "https://github.com/foikwuogu/aipir",
+  "doi": "https://doi.org/10.5281/zenodo.23849300",
+  "concept_doi": "https://doi.org/10.5281/zenodo.23846614",
+  "release_date": "2026-10-31"
 }
