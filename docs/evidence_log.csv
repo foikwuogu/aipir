@@ -2,4 +2,4 @@ date,artifact_or_event,type,venue_or_host,link_or_doi,status,prong_tags,metrics_
 2026-10-31,AIPIR v0.1.0 replication package,software,Zenodo,10.5281/zenodo.23846615,published,,,,https://zenodo.org/records/23846615; concept DOI 10.5281/zenodo.23846614
 2026-10-31,AIPIR v0.1.0 source,software,GitHub,https://github.com/foikwuogu/aipir/releases/tag/v0.1.0,published,,,,main = commit 1d51a1b; tag v0.1.0
 2026-11-01,AIPIR v0.2.0 replication package,software,Zenodo,10.5281/zenodo.23849300,published,,,,https://zenodo.org/records/23849300; version 2 of concept 10.5281/zenodo.23846614
-2026-11-01,AIPIR v0.2.0 source,software,GitHub,https://github.com/foikwuogu/aipir/releases/tag/v0.2.0,release form prefilled,,,,main = commit f4f4faf
+2026-11-01,AIPIR v0.2.0 source,software,GitHub,https://github.com/foikwuogu/aipir/releases/tag/v0.2.0,published,,,,tag v0.2.0 = commit f4f4faf
