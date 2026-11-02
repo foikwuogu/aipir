@@ -15,4 +15,3 @@ python code/05_figures.py "$@"                    # add --final only after the v
 node code/06_document.js "$@"
 node docs/training/build_deck.js                  # training deck (set PPTX_SKILL_DIR to apply theme colours)
 python code/08_readme.py "$@"
-python code/09_dashboard.py                        # static results dashboard (site/, published to GitHub Pages)

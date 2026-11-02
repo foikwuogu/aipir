@@ -4,10 +4,6 @@
 
 **Status: v0.2.0 released** - see the DOI badge and CITATION.cff.
 
-**[Live results dashboard](https://foikwuogu.github.io/aipir/)** - the headline numbers and
-figures below, rebuilt by `code/09_dashboard.py` and published by `.github/workflows/pages.yml`
-whenever `paper/` changes.
-
 AIPIR is an open, cloud-native framework that connects **detection, response and recovery** for
 energy-sector control systems in one reproducible loop:
 
