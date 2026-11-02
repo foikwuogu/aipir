@@ -100,6 +100,59 @@ Every endpoint except `/healthz` needs a token. For lab tokens, see `deploy/READ
 mode a second person must approve, and Ansible still runs in check mode until the site signs
 off. Nothing writes to a control system. See `deploy/RUNBOOK.md`.
 
+## Live dashboard
+
+A small Streamlit app (`dashboard/app.py`) polls the detector service's `/metrics` endpoint and
+shows the anomaly score vs. threshold, the alarm status per process, and the top contributing
+sensors, refreshing every second:
+
+![AIPIR Streamlit dashboard](docs/images/dashboard.png)
+
+### Clone and run it locally
+
+```bash
+# 1. Clone the repo and install dependencies
+git clone https://github.com/foikwuogu/aipir.git
+cd aipir
+pip install -r requirements.txt
+pip install -r dashboard/requirements.txt
+
+# 2. Fetch the HAI replay data (only needed once)
+python code/01_fetch.py
+
+# 3. Start the detector service in lab mode (mints Zero-Trust tokens for you)
+source docs/training/lab_env.sh
+python -m aipir.service --model models/aipir_hai2103.joblib \
+    --replay data/raw/hai-21.03/test2.csv.gz --speed 60 --port 9108 &
+
+# 4. Launch the dashboard, pointing it at the service with a viewer token
+export AIPIR_VIEWER_TOKEN=$VIEWER_TOKEN   # set by lab_env.sh, role aipir.viewer
+streamlit run dashboard/app.py
+```
+
+On Windows (PowerShell), set `PYTHONPATH` to the `framework` folder and mint a viewer token
+yourself instead of sourcing the bash script:
+
+```powershell
+git clone https://github.com/foikwuogu/aipir.git
+cd aipir
+pip install -r requirements.txt
+pip install -r dashboard/requirements.txt
+python code/01_fetch.py
+
+$env:AIPIR_ENV = "lab"; $env:AIPIR_AUTH_MODE = "hs256"; $env:AIPIR_LAB_SECRET = "<any-string>"
+$env:PYTHONPATH = "$PWD\framework"
+python -m aipir.service --model models/aipir_hai2103.joblib `
+    --replay data/raw/hai-21.03/test2.csv.gz --speed 60 --port 9108
+
+# in a second terminal, with the same AIPIR_* env vars set
+$env:AIPIR_VIEWER_TOKEN = (python -m aipir.zerotrust mint --sub viewer --role aipir.viewer --ttl 86400)
+streamlit run dashboard/app.py
+```
+
+Then open http://localhost:8501. The sidebar lets you change the metrics URL, paste a different
+bearer token, and adjust the refresh interval.
+
 ## Data and sources
 
 - HAI security dataset, versions 21.03 and 20.07, https://github.com/icsdataset/hai at commit
