@@ -126,7 +126,7 @@ python -m aipir.service --model models/aipir_hai2103.joblib \
     --replay data/raw/hai-21.03/test2.csv.gz --speed 60 --port 9108 &
 
 # 4. Launch the dashboard, pointing it at the service with a viewer token
-export AIPIR_VIEWER_TOKEN=$VIEWER_TOKEN   # set by lab_env.sh, role aipir.viewer
+export AIPIR_VIEWER_TOKEN=$VIEWER   # set by lab_env.sh, role aipir.viewer
 streamlit run dashboard/app.py
 ```
 
